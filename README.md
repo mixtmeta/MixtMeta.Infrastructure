@@ -20,7 +20,6 @@ Example User Object:
       int UserId { get; set; }
       string Name { get; set; }
       string Email { get; set; }
-      }
     }
   
     public class User : MixtMetaEntity, IUser
@@ -36,7 +35,6 @@ Example User Object:
       [MaxLength(255)]
       [RegularExpression(@"^.+@.+\..+$")]
       public string Email { get; set; }
-      }
     }
   
 Then subclass the UnitOfWork, provide your connection string and add your repositories:
