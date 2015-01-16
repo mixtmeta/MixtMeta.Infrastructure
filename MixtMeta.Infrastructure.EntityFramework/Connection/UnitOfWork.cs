@@ -17,10 +17,11 @@ namespace MixtMeta.Infrastructure.EntityFramework.Connection
         private bool _disposed = false;
 
         protected abstract string NameOrConnectionString { get; }
+        protected abstract MixtMetaDbContext DbContext { get; }
 
         public UnitOfWork()
         {
-            _context = new MixtMetaDbContext(NameOrConnectionString);
+            _context = DbContext;
         }
 
         public void Save()
