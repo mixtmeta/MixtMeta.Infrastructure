@@ -3,7 +3,9 @@ using MixtMeta.Infrastructure.EntityFramework.Interfaces.Entities;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -44,6 +46,16 @@ namespace MixtMeta.Infrastructure.EntityFramework.Connection
             return _dbSet;
         }
 
+		public IEnumerable<TEntity> GetAll(params Expression<Func<TEntity, IMixtMetaEntity>>[] includeExpressions)
+		{
+			IQueryable<TEntity> set = _dbSet;
+			foreach (var exp in includeExpressions)
+			{
+				set = set.Include(exp);
+			}
+			return set;
+		}
+
         public TEntity NewObject()
         {
             return _dbSet.Create<TEntity>();
@@ -53,6 +65,16 @@ namespace MixtMeta.Infrastructure.EntityFramework.Connection
         {
             return _dbSet.Find(entityId);
         }
+
+		public TEntity GetEntityById(Expression<Func<TEntity, bool>> keySelector, params Expression<Func<TEntity, IMixtMetaEntity>>[] includeExpressions)
+		{
+			IQueryable<TEntity> set = _dbSet;
+			foreach (var exp in includeExpressions)
+			{
+				set = set.Include(exp);
+			}
+			return (set as DbQuery<TEntity>).FirstOrDefault(keySelector);
+		}
 
         public void Insert(TEntity entity)
         {
